@@ -1,6 +1,5 @@
 package com.petrukhnov.tsikuri
 
-import com.petrukhnov.tsikuri.ClickHelper.waitAndClickImage
 import nu.pattern.OpenCV
 
 object Main {
@@ -10,6 +9,14 @@ object Main {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        waitAndClickImage("button.png")
+        ClickHelper.waitAndClickImage("button.png")
+
+        val imgResult = ImageHelper.waitForImage("button.png")
+        when (imgResult) {
+            is ImageSearchResult.Found -> {
+                MouseHelper.moveTo(imgResult.location)
+            }
+        }
+
     }
 }

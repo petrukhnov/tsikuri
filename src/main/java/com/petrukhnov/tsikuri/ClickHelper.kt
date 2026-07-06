@@ -22,7 +22,7 @@ object ClickHelper {
         when(imageSearchResult) {
             is ImageSearchResult.Found -> {
                 val robot = Robot()
-                robot.mouseMove(imageSearchResult.location.x.toInt(), imageSearchResult.location.y.toInt())
+                MouseHelper.moveTo(imageSearchResult.location)
                 robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
                 robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
             }

@@ -54,6 +54,15 @@ object ImageHelper {
         return searchResult
     }
 
+    fun waitForImage(
+        imagePath:  String,
+        timeoutMs: Long = 5000,
+        minConfidence: Double = DEFAULT_MIN_CONFIDENCE
+    ): ImageSearchResult {
+        val searchTemplate = readImageResource(imagePath)
+        return waitForImage(searchTemplate, timeoutMs, minConfidence)
+    }
+
     // todo: requireImage, waitRequiredImage
 
 
