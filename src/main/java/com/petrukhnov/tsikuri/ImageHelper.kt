@@ -12,9 +12,10 @@ import java.awt.image.DataBufferByte
 import java.io.IOException
 
 object ImageHelper {
+    private const val DEFAULT_MIN_CONFIDENCE = 0.85
 
 
-    fun findImage(searchTemplate: Mat): ImageSearchResult {
+    fun findImage(searchTemplate: Mat, minConfidence: Double = DEFAULT_MIN_CONFIDENCE): ImageSearchResult {
 
         val screenshot = takeScreenshot()
         val result = Mat()
@@ -27,24 +28,28 @@ object ImageHelper {
         )
 
         val match = Core.minMaxLoc(result)
-        if (result.empty()) {
+        if (result.empty() || match.maxVal < minConfidence) {
             return ImageSearchResult.NotFound
         } else {
             val centerX = (match.maxLoc.x + searchTemplate.width() / 2.0)
             val centerY = (match.maxLoc.y + searchTemplate.height() / 2.0)
             return ImageSearchResult.Found(
                 location = Point(centerX, centerY),
-                confidence = 0.0
+                confidence = match.maxVal
             )
         }
     }
 
-    fun waitForImage(searchTemplate: Mat, timeoutMs: Long = 5000): ImageSearchResult {
-        var searchResult =  findImage(searchTemplate)
-        val currentTime = System.currentTimeMillis()
-        while (System.currentTimeMillis() - currentTime > timeoutMs && searchResult == ImageSearchResult.NotFound) {
+    fun waitForImage(
+        searchTemplate: Mat,
+        timeoutMs: Long = 5000,
+        minConfidence: Double = DEFAULT_MIN_CONFIDENCE
+    ): ImageSearchResult {
+        var searchResult =  findImage(searchTemplate, minConfidence)
+        val startTime = System.currentTimeMillis()
+        while (System.currentTimeMillis() - startTime < timeoutMs && searchResult == ImageSearchResult.NotFound) {
             Thread.sleep(50)
-            searchResult =  findImage(searchTemplate)
+            searchResult =  findImage(searchTemplate, minConfidence)
         }
         return searchResult
     }
