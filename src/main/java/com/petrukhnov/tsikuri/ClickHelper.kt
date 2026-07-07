@@ -1,5 +1,7 @@
 package com.petrukhnov.tsikuri
 
+import org.opencv.core.Point
+import java.awt.MouseInfo
 import java.awt.Robot
 import java.awt.event.InputEvent
 
@@ -22,9 +24,15 @@ object ClickHelper {
         when(imageSearchResult) {
             is ImageSearchResult.Found -> {
                 val robot = Robot()
-                MouseHelper.moveTo(imageSearchResult.location)
-                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                val previousLocation = MouseInfo.getPointerInfo().location
+
+                try {
+                    MouseHelper.moveTo(imageSearchResult.location)
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+                } finally {
+                    MouseHelper.moveTo(Point(previousLocation.x.toDouble(), previousLocation.y.toDouble()))
+                }
             }
             is ImageSearchResult.NotFound -> {
                 //do nothing

@@ -75,7 +75,7 @@ object ImageHelper {
 
     @Throws(IOException::class)
     fun readImageResource(resourceName: String?): Mat {
-        Main::class.java.getClassLoader().getResourceAsStream(resourceName).use { inputStream ->
+        this::class.java.getClassLoader().getResourceAsStream(resourceName).use { inputStream ->
             if (inputStream == null) {
                 throw IOException("Resource not found on classpath: $resourceName")
             }
