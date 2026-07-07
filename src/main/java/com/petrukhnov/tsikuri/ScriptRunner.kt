@@ -47,7 +47,7 @@ class ScriptRunner {
                 //delete
                 if(event.keyCode == 3667) {
                     //stop scripts
-                    currentScript?.active = false
+                    currentScript?.stop()
                 }
 
                 //home
@@ -73,8 +73,11 @@ class ScriptRunner {
             val input = readln()
 
             when (input) {
-                //exit script
+                "" -> {
+                    //nothing
+                }
                 "x" -> {
+                    //exit script
                     currentScript?.let { script ->
                         println("stopping script: ${script.scriptCode}")
                         script.stop()
