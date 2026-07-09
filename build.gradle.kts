@@ -20,14 +20,19 @@ dependencies {
     implementation("org.openpnp:opencv:4.9.0-0")
     //key hooks
     implementation("com.1stleg:jnativehook:2.1.0")
+    //text recognition
+    implementation("net.sourceforge.tess4j:tess4j:5.19.0")
 
     testImplementation(platform("org.junit:junit-bom:6.0.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.slf4j:slf4j-api:2.0.17")
+    testImplementation("ch.qos.logback:logback-classic:1.5.18")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
     useJUnitPlatform()
+    failOnNoDiscoveredTests = false
 }
 kotlin {
     jvmToolchain(21)

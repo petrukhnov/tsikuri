@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import nu.pattern.OpenCV
 import org.jnativehook.GlobalScreen
 import org.jnativehook.keyboard.NativeKeyEvent
 import org.jnativehook.keyboard.NativeKeyListener
@@ -18,6 +19,10 @@ class ScriptRunner {
     private var job: Job? = null
     private var currentScript: ScriptTemplate? = null
     private var scripts: MutableMap<String, ScriptTemplate> = mutableMapOf()
+
+    init {
+        OpenCV.loadLocally()
+    }
 
     fun logConfig() {
         LogManager.getLogManager().reset()
