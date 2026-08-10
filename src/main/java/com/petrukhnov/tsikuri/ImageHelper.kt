@@ -14,7 +14,6 @@ import java.io.IOException
 object ImageHelper {
     private const val DEFAULT_MIN_CONFIDENCE = 0.85
 
-
     fun findImage(searchTemplate: Mat, minConfidence: Double = DEFAULT_MIN_CONFIDENCE): ImageSearchResult {
 
         val screenshot = takeScreenshot()
@@ -38,6 +37,11 @@ object ImageHelper {
                 confidence = match.maxVal
             )
         }
+    }
+
+    fun findImage(imagePath:  String, minConfidence: Double = DEFAULT_MIN_CONFIDENCE): ImageSearchResult {
+        val searchTemplate = readImageResource(imagePath)
+        return findImage(searchTemplate, minConfidence)
     }
 
     fun waitForImage(

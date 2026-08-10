@@ -10,9 +10,6 @@ import javax.swing.JComponent
 import javax.swing.JWindow
 import javax.swing.SwingUtilities
 import javax.swing.Timer
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 object DebugHelper {
 

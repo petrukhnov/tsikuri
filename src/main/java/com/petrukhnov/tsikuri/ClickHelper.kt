@@ -7,6 +7,8 @@ import java.awt.event.InputEvent
 
 object ClickHelper {
 
+    private val robot = Robot()
+
     fun clickImage(imagePath:  String) {
         val searchTemplate = ImageHelper.readImageResource(imagePath)
         val foundImage = ImageHelper.findImage(searchTemplate)
@@ -20,19 +22,22 @@ object ClickHelper {
         clickImage(foundImage)
     }
 
+    fun clickImage(imageSearchResultFound:  ImageSearchResult.Found) {
+        val previousLocation = MouseInfo.getPointerInfo().location
+
+        try {
+            MouseHelper.moveTo(imageSearchResultFound.location)
+            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+        } finally {
+            MouseHelper.moveTo(Point(previousLocation.x.toDouble(), previousLocation.y.toDouble()))
+        }
+    }
+
     private fun clickImage(imageSearchResult:  ImageSearchResult) {
         when(imageSearchResult) {
             is ImageSearchResult.Found -> {
-                val robot = Robot()
-                val previousLocation = MouseInfo.getPointerInfo().location
-
-                try {
-                    MouseHelper.moveTo(imageSearchResult.location)
-                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
-                } finally {
-                    MouseHelper.moveTo(Point(previousLocation.x.toDouble(), previousLocation.y.toDouble()))
-                }
+                clickImage(imageSearchResult)
             }
             is ImageSearchResult.NotFound -> {
                 //do nothing

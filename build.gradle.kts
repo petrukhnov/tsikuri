@@ -17,7 +17,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4")
     //image detection
-    implementation("org.openpnp:opencv:4.9.0-0")
+    implementation("org.openpnp:opencv:4.9.0-0") //fixme should be also implemented in the project
     //key hooks
     implementation("com.1stleg:jnativehook:2.1.0")
     //text recognition
