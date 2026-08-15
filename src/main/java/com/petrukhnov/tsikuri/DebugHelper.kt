@@ -57,4 +57,5 @@ object DebugHelper {
             graphics2D.drawRect(1, 1, width - 3, height - 3)
         }
     }
+    //todo remove white background
 }

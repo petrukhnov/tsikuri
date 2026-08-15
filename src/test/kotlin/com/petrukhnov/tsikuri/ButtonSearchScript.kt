@@ -10,7 +10,8 @@ private class ButtonSearchScript : ScriptTemplate("sbt") {
         when(result) {
             is ImageSearchResult.Found -> {
                 val rectangle = Rectangle(result.location.x.toInt()-50, result.location.y.toInt()+20, 100, 30)
-                DebugHelper.drawRedRectangle(rectangle, 1000)
+                DebugHelper.drawRedRectangle(rectangle, 2000)
+                Thread.sleep(3_000)
                 val text = TextRecognitionHelper.readText(rectangle)
                 println("found: $text")
             }

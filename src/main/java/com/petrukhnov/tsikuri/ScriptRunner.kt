@@ -106,6 +106,14 @@ class ScriptRunner {
         }
     }
 
+    //
+    /*
+    fixme add commands for:
+     - mouse return enable/disable
+     - exit/stop script
+     - also add params for scripts / or modify script logic through commands
+     */
+
     fun loadScripts() {
         addScript(ClickerScript())
     }

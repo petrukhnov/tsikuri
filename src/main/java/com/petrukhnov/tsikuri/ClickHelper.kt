@@ -23,15 +23,29 @@ object ClickHelper {
     }
 
     fun clickImage(imageSearchResultFound:  ImageSearchResult.Found) {
+        clickImage(imageSearchResultFound, 0, 0)
+    }
+
+    fun clickImage(imageSearchResultFound:  ImageSearchResult.Found, offsetX: Int = 0, offsetY: Int = 0) {
+        moveAndClick(imageSearchResultFound.location.x, imageSearchResultFound.location.y, offsetX, offsetY)
+    }
+
+    fun moveAndClick(x: Double, y: Double, offsetX: Int = 0, offsetY: Int = 0) {
         val previousLocation = MouseInfo.getPointerInfo().location
 
         try {
-            MouseHelper.moveTo(imageSearchResultFound.location)
-            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+            MouseHelper.moveTo(Point(x+offsetX, y+offsetY))
+            moveAndClick()
         } finally {
             MouseHelper.moveTo(Point(previousLocation.x.toDouble(), previousLocation.y.toDouble()))
         }
+    }
+
+    fun moveAndClick() {
+        Thread.sleep(100)
+        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+        Thread.sleep(100)
     }
 
     private fun clickImage(imageSearchResult:  ImageSearchResult) {
