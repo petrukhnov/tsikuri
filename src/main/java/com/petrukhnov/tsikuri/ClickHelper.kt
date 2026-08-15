@@ -1,5 +1,9 @@
 package com.petrukhnov.tsikuri
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.opencv.core.Point
 import java.awt.MouseInfo
 import java.awt.Robot
@@ -45,10 +49,12 @@ object ClickHelper {
     }
 
     fun moveAndClick() {
-        Thread.sleep(100)
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
-        Thread.sleep(100)
+        CoroutineScope(Dispatchers.Default).launch {
+            delay(100)
+            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+            delay(100)
+        }
     }
 
     private fun clickImage(imageSearchResult:  ImageSearchResult) {

@@ -75,7 +75,7 @@ class ScriptRunner {
     }
 
     fun listenInput() {
-        println("type commands: x ${scripts.keys.joinToString(" ")}")
+        println("type commands: x kc mr ${scripts.keys.joinToString(" ")}")
         while (true) {
             print("> ")
             val input = readln()
@@ -110,6 +110,7 @@ class ScriptRunner {
                         continue
                     }
                     currentScript = selectedScript
+                    println("Script selected: ${selectedScript.javaClass.name}")
                     selectedScript.active = true
                     job = CoroutineScope(Dispatchers.Default).launch  {
                         selectedScript.playScriptLoop()

@@ -9,7 +9,7 @@ import java.awt.event.InputEvent
 /**
  *
  */
-class ClickerScript: ScriptTemplate("tcl") {
+class ClickerScript: ScriptTemplate("click") {
 
     enum class Action {
         MORE, LESS

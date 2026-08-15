@@ -1,61 +1,70 @@
 package com.petrukhnov.tsikuri
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import java.awt.BasicStroke
+import java.awt.Canvas
 import java.awt.Color
+import java.awt.EventQueue
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Rectangle
+import java.awt.Robot
 import java.awt.Window
-import javax.swing.JComponent
-import javax.swing.JWindow
-import javax.swing.SwingUtilities
-import javax.swing.Timer
 
 object DebugHelper {
 
-    fun drawRedRectangle(
+    suspend fun drawRedRectangle(
         topLeftX: Double,
         topLeftY: Double,
         width: Int,
         height: Int,
-        durationMs: Int = 1000
+        durationMs: Long = 1000
     ) {
         drawRedRectangle(Rectangle(topLeftX.toInt(), topLeftY.toInt(), width, height), )
     }
 
-    fun drawRedRectangle(
-        rectangle: Rectangle,
-        durationMs: Int = 1000
-    ) {
-        SwingUtilities.invokeLater {
-            val window = JWindow().apply {
-                type = Window.Type.POPUP
+    suspend fun drawRedRectangle(rectangle: Rectangle, durationMs: Long = 1000) {
+
+        lateinit var window: Window
+
+        EventQueue.invokeAndWait {
+            // Sometimes transparent windows not supported/not enabled on specific systems.
+            // The workaround is to make a screenshot and then use it as a background.
+            val screenshot = Robot().createScreenCapture(rectangle)
+
+            window = Window(null).apply {
                 isAlwaysOnTop = true
-                background = Color(0, 0, 0, 255)
                 bounds = rectangle
-                contentPane.add(RectangleComponent())
-                isVisible = true
+                background = Color.BLACK
             }
 
-            Timer(durationMs) {
-                window.dispose()
-            }.apply {
-                isRepeats = false
-                start()
+            val canvas = object : Canvas() {
+                override fun paint(g: Graphics) {
+                    val g2 = g.create() as Graphics2D
+                    try {
+                        //draw original content
+                        g2.drawImage(screenshot, 0, 0, null)
+
+                        //draw outline
+                        g2.color = Color.RED
+                        g2.stroke = BasicStroke(3f)
+                        g2.drawRect(1, 1, width - 3, height - 3)
+                    } finally {
+                        g2.dispose()
+                    }
+                }
             }
+            window.add(canvas)
+            window.isVisible = true
+        }
+
+        delay(durationMs)
+
+        EventQueue.invokeLater {
+            window.dispose()
         }
     }
 
-    private class RectangleComponent : JComponent() {
-
-        override fun paintComponent(graphics: Graphics) {
-            super.paintComponent(graphics)
-
-            val graphics2D = graphics as Graphics2D
-            graphics2D.color = Color.RED
-            graphics2D.stroke = BasicStroke(3f)
-            graphics2D.drawRect(1, 1, width - 3, height - 3)
-        }
-    }
-    //todo remove white background
 }
