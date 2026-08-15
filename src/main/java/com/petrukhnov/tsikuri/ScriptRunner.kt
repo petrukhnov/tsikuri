@@ -19,6 +19,7 @@ class ScriptRunner {
     private var job: Job? = null
     private var currentScript: ScriptTemplate? = null
     private var scripts: MutableMap<String, ScriptTemplate> = mutableMapOf()
+    private var keyControlEnabled = false
 
     init {
         OpenCV.loadLocally()
@@ -44,27 +45,29 @@ class ScriptRunner {
 
             override fun nativeKeyPressed(event: NativeKeyEvent) {
 
-                //insert
-                if(event.keyCode == 3666) {
+                if (keyControlEnabled) {
+                    //insert
+                    if(event.keyCode == 3666) {
 
-                }
+                    }
 
-                //delete
-                if(event.keyCode == 3667) {
-                    //stop scripts
-                    currentScript?.stop()
-                }
+                    //delete
+                    if(event.keyCode == 3667) {
+                        //stop scripts
+                        currentScript?.stop()
+                    }
 
-                //home
-                if(event.keyCode == 3655) {
-                    //todo something?
-                    exitProcess(0)
-                }
+                    //home
+                    if(event.keyCode == 3655) {
+                        //todo something?
+                        //exitProcess(0)
+                    }
 
-                //end
-                if(event.keyCode == 3663) {
-                    //exit
-                    exitProcess(0)
+                    //end
+                    if(event.keyCode == 3663) {
+                        //exit
+                        exitProcess(0)
+                    }
                 }
             }
         })
@@ -90,6 +93,16 @@ class ScriptRunner {
                         job?.cancel()
                     } ?: println("No active script running")
                 }
+                "kc" -> {
+                    //toggle key control
+                    keyControlEnabled != keyControlEnabled
+                    println("keyControlEnabled: $keyControlEnabled")
+                }
+                "mr" -> {
+                    //toggle key control
+                    ClickHelper.returnMouse != ClickHelper.returnMouse
+                    println("ClickHelper.returnMouse: ${ClickHelper.returnMouse}")
+                }
                 // run existing script
                 else -> {
                     val selectedScript = scripts[input] ?: run {
@@ -108,10 +121,8 @@ class ScriptRunner {
 
     //
     /*
-    fixme add commands for:
-     - mouse return enable/disable
-     - exit/stop script
-     - also add params for scripts / or modify script logic through commands
+    todo add commands for:
+     - params for scripts / or modify script logic through commands
      */
 
     fun loadScripts() {

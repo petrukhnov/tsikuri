@@ -8,6 +8,7 @@ import java.awt.event.InputEvent
 object ClickHelper {
 
     private val robot = Robot()
+    var returnMouse = false
 
     fun clickImage(imagePath:  String) {
         val searchTemplate = ImageHelper.readImageResource(imagePath)
@@ -37,7 +38,9 @@ object ClickHelper {
             MouseHelper.moveTo(Point(x+offsetX, y+offsetY))
             moveAndClick()
         } finally {
-            MouseHelper.moveTo(Point(previousLocation.x.toDouble(), previousLocation.y.toDouble()))
+            if (returnMouse) {
+                MouseHelper.moveTo(Point(previousLocation.x.toDouble(), previousLocation.y.toDouble()))
+            }
         }
     }
 
