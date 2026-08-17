@@ -52,7 +52,7 @@ object ImageHelper {
         var searchResult =  findImage(searchTemplate, minConfidence)
         val startTime = System.currentTimeMillis()
         while (System.currentTimeMillis() - startTime < timeoutMs && searchResult == ImageSearchResult.NotFound) {
-            Thread.sleep(50)
+            Thread.sleep(50) //fixme through suspend
             searchResult =  findImage(searchTemplate, minConfidence)
         }
         return searchResult

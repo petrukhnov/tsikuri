@@ -1,5 +1,6 @@
 package com.petrukhnov.tsikuri
 
+import net.sourceforge.tess4j.ITessAPI
 import net.sourceforge.tess4j.ITesseract
 import net.sourceforge.tess4j.Tesseract
 import java.awt.Color
@@ -30,7 +31,7 @@ object TextRecognitionHelper {
 
     data class Options(
         val language: String = "eng",
-        val pageSegmentationMode: PageSegmentationMode = PageSegmentationMode.AUTO,
+        val pageSegmentationMode: Int = ITessAPI.TessPageSegMode.PSM_SINGLE_LINE,
         val characterWhitelist: String? = DEFAULT_ASCII_WHITELIST,
         val datapath: String? = null,
         val scale: Double = 2.0,
@@ -38,17 +39,6 @@ object TextRecognitionHelper {
         val trimResult: Boolean = true,
         val variables: Map<String, String> = emptyMap()
     )
-
-    enum class PageSegmentationMode(val value: Int) {
-        AUTO(3),
-        SINGLE_BLOCK(6),
-        SINGLE_LINE(7),
-        SINGLE_WORD(8),
-        SINGLE_CHAR(10),
-        SPARSE_TEXT(11),
-        SPARSE_TEXT_WITH_OSD(12),
-        RAW_LINE(13)
-    }
 
     fun readText(
         topLeftX: Int,
@@ -84,11 +74,11 @@ object TextRecognitionHelper {
         threshold: Boolean = false
     ): Options {
         val pageSegmentationMode = when {
-            expectedLines == 1 && approximateCharacters == 1 -> PageSegmentationMode.SINGLE_CHAR
-            expectedLines == 1 && approximateCharacters != null && approximateCharacters <= 16 -> PageSegmentationMode.SINGLE_WORD
-            expectedLines == 1 -> PageSegmentationMode.SINGLE_LINE
-            expectedLines != null && expectedLines > 1 -> PageSegmentationMode.SINGLE_BLOCK
-            else -> PageSegmentationMode.AUTO
+            expectedLines == 1 && approximateCharacters == 1 -> ITessAPI.TessPageSegMode.PSM_SINGLE_CHAR
+            expectedLines == 1 && approximateCharacters != null && approximateCharacters <= 16 -> ITessAPI.TessPageSegMode.PSM_SINGLE_WORD
+            expectedLines == 1 -> ITessAPI.TessPageSegMode.PSM_SINGLE_LINE
+            expectedLines != null && expectedLines > 1 -> ITessAPI.TessPageSegMode.PSM_SINGLE_BLOCK
+            else -> ITessAPI.TessPageSegMode.PSM_AUTO
         }
 
         return Options(
@@ -102,8 +92,8 @@ object TextRecognitionHelper {
         return Tesseract().apply {
             setDatapath(resolveDatapath(options).absolutePath)
             setLanguage(options.language)
-            setPageSegMode(options.pageSegmentationMode.value)
-            //options.characterWhitelist?.let { setVariable("tessedit_char_whitelist", it) }
+            setPageSegMode(options.pageSegmentationMode)
+            options.characterWhitelist?.let { setVariable("tessedit_char_whitelist", it) }
             options.variables.forEach { (name, value) -> setVariable(name, value) }
         }
     }

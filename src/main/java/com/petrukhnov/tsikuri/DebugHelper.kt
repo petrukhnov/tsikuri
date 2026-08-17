@@ -1,8 +1,5 @@
 package com.petrukhnov.tsikuri
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import java.awt.BasicStroke
 import java.awt.Canvas
 import java.awt.Color
@@ -15,7 +12,7 @@ import java.awt.Window
 
 object DebugHelper {
 
-    suspend fun drawRedRectangle(
+    fun drawRedRectangle(
         topLeftX: Double,
         topLeftY: Double,
         width: Int,
@@ -25,7 +22,7 @@ object DebugHelper {
         drawRedRectangle(Rectangle(topLeftX.toInt(), topLeftY.toInt(), width, height), )
     }
 
-    suspend fun drawRedRectangle(rectangle: Rectangle, durationMs: Long = 1000) {
+    fun drawRedRectangle(rectangle: Rectangle, durationMs: Long = 1000) {
 
         lateinit var window: Window
 
@@ -60,7 +57,7 @@ object DebugHelper {
             window.isVisible = true
         }
 
-        delay(durationMs)
+        Thread.sleep(durationMs)
 
         EventQueue.invokeLater {
             window.dispose()

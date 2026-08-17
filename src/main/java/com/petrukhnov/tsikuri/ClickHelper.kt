@@ -1,9 +1,5 @@
 package com.petrukhnov.tsikuri
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.opencv.core.Point
 import java.awt.MouseInfo
 import java.awt.Robot
@@ -15,9 +11,13 @@ object ClickHelper {
     var returnMouse = false
 
     fun clickImage(imagePath:  String) {
+        clickImage(imagePath, 0, 0)
+    }
+
+    fun clickImage(imagePath:  String, offsetX: Int, offsetY: Int) {
         val searchTemplate = ImageHelper.readImageResource(imagePath)
         val foundImage = ImageHelper.findImage(searchTemplate)
-        clickImage(foundImage)
+        clickImage(foundImage, offsetX, offsetY)
     }
 
     @JvmStatic
@@ -31,6 +31,8 @@ object ClickHelper {
         clickImage(imageSearchResultFound, 0, 0)
     }
 
+
+
     fun clickImage(imageSearchResultFound:  ImageSearchResult.Found, offsetX: Int = 0, offsetY: Int = 0) {
         moveAndClick(imageSearchResultFound.location.x, imageSearchResultFound.location.y, offsetX, offsetY)
     }
@@ -40,7 +42,7 @@ object ClickHelper {
 
         try {
             MouseHelper.moveTo(Point(x+offsetX, y+offsetY))
-            moveAndClick()
+            click()
         } finally {
             if (returnMouse) {
                 MouseHelper.moveTo(Point(previousLocation.x.toDouble(), previousLocation.y.toDouble()))
@@ -48,19 +50,17 @@ object ClickHelper {
         }
     }
 
-    fun moveAndClick() {
-        CoroutineScope(Dispatchers.Default).launch {
-            delay(100)
-            robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
-            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
-            delay(100)
-        }
+    fun click() {
+        Thread.sleep(100)
+        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK)
+        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
+        Thread.sleep(100)
     }
 
-    private fun clickImage(imageSearchResult:  ImageSearchResult) {
+    private fun clickImage(imageSearchResult:  ImageSearchResult, offsetX: Int = 0, offsetY: Int = 0) {
         when(imageSearchResult) {
             is ImageSearchResult.Found -> {
-                clickImage(imageSearchResult)
+                clickImage(imageSearchResult, offsetX, offsetY)
             }
             is ImageSearchResult.NotFound -> {
                 //do nothing

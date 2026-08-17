@@ -95,12 +95,12 @@ class ScriptRunner {
                 }
                 "kc" -> {
                     //toggle key control
-                    keyControlEnabled != keyControlEnabled
+                    keyControlEnabled = !keyControlEnabled
                     println("keyControlEnabled: $keyControlEnabled")
                 }
                 "mr" -> {
                     //toggle key control
-                    ClickHelper.returnMouse != ClickHelper.returnMouse
+                    ClickHelper.returnMouse = !ClickHelper.returnMouse
                     println("ClickHelper.returnMouse: ${ClickHelper.returnMouse}")
                 }
                 // run existing script
